@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Интерактивный прототип AI-системы мониторинга событий информационной безопасности для СРО2">
+  <title>AEGIS SIEM — прототип СРО2</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%2309141f' d='M0 0h64v64H0z'/%3E%3Cpath fill='%233ee7c5' d='M32 7 53 15v16c0 14-8 23-21 29C19 54 11 45 11 31V15l21-8Zm0 8-13 5v11c0 9 4 15 13 20 9-5 13-11 13-20V20l-13-5Z'/%3E%3Cpath fill='%23f6b94a' d='M29 23h6v17h-6zM29 44h6v6h-6z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Основная навигация">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">A</div>
+        <div><strong>AEGIS</strong><span>AI SIEM</span></div>
+      </div>
+      <nav class="nav-list">
+        <button class="nav-item active" data-view="dashboard"><span>01</span>Обзор</button>
+        <button class="nav-item" data-view="events"><span>02</span>События</button>
+        <button class="nav-item" data-view="incidents"><span>03</span>Инциденты</button>
+        <button class="nav-item" data-view="model"><span>04</span>ИИ-модуль</button>
+        <button class="nav-item" data-view="architecture"><span>05</span>Архитектура</button>
+      </nav>
+      <div class="sidebar-foot">
+        <span class="status-dot"></span>
+        <div><strong>Демо-режим</strong><span>Синтетические данные</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">СРО2 · интерактивный прототип</p>
+          <h1 id="page-title">Центр мониторинга</h1>
+        </div>
+        <div class="top-actions">
+          <label class="global-search">
+            <span>Поиск</span>
+            <input id="global-search" type="search" placeholder="IP, пользователь, событие" autocomplete="off">
+          </label>
+          <button class="icon-button" id="alerts-button" aria-label="Показать критические инциденты">
+            <span aria-hidden="true">!</span><b id="alert-count">3</b>
+          </button>
+          <div class="analyst"><span>АК</span><div><strong>Аналитик</strong><small>Уровень 1</small></div></div>
+        </div>
+      </header>
+
+      <section class="view active" id="dashboard-view" aria-labelledby="page-title">
+        <div class="mission-strip">
+          <div><span>Текущий режим</span><strong>Наблюдение и первичная оценка</strong></div>
+          <div><span>Последнее событие</span><strong>12 секунд назад</strong></div>
+          <div><span>Источники</span><strong>6 из 6 подключены</strong></div>
+          <div><span>Обновление модели</span><strong>Планируется на СРО3</strong></div>
+        </div>
+
+        <div class="metric-grid" aria-label="Ключевые показатели">
+          <article class="metric critical"><span>Критические</span><strong>3</strong><small>требуют проверки</small></article>
+          <article class="metric"><span>События за 24 часа</span><strong>12 480</strong><small>демонстрационный поток</small></article>
+          <article class="metric"><span>Аномалии</span><strong>47</strong><small>оценка ИИ выше порога</small></article>
+          <article class="metric"><span>Открытые инциденты</span><strong>8</strong><small>3 назначены аналитику</small></article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="panel trend-panel">
+            <div class="panel-head"><div><p class="eyebrow">Динамика</p><h2>События и аномалии</h2></div><div class="legend"><span class="legend-events">События</span><span class="legend-anomalies">Аномалии</span></div></div>
+            <svg class="trend-chart" viewBox="0 0 760 260" role="img" aria-label="Демонстрационный график событий и аномалий за сутки">
+              <defs>
+                <linearGradient id="areaEvents" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3ee7c5" stop-opacity=".28"/><stop offset="1" stop-color="#3ee7c5" stop-opacity="0"/></linearGradient>
+                <linearGradient id="areaAnomaly" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6b94a" stop-opacity=".22"/><stop offset="1" stop-color="#f6b94a" stop-opacity="0"/></linearGradient>
+              </defs>
+              <g class="chart-grid"><path d="M40 35H735M40 90H735M40 145H735M40 200H735"/><path d="M40 35V220M215 35V220M390 35V220M565 35V220M735 35V220"/></g>
+              <path class="area events-area" d="M40 183 C105 175 130 118 195 132 S300 181 370 126 S475 68 540 106 S630 157 735 64 L735 220 L40 220Z"/>
+              <path class="area anomaly-area" d="M40 211 C105 208 135 194 195 200 S300 215 370 195 S470 165 540 188 S635 207 735 174 L735 220 L40 220Z"/>
+              <path class="line events-line" d="M40 183 C105 175 130 118 195 132 S300 181 370 126 S475 68 540 106 S630 157 735 64"/>
+              <path class="line anomaly-line" d="M40 211 C105 208 135 194 195 200 S300 215 370 195 S470 165 540 188 S635 207 735 174"/>
+              <g class="axis-labels"><text x="40" y="246">00:00</text><text x="205" y="246">06:00</text><text x="380" y="246">12:00</text><text x="555" y="246">18:00</text><text x="705" y="246">24:00</text></g>
+            </svg>
+          </article>
+
+          <article class="panel source-panel">
+            <div class="panel-head"><div><p class="eyebrow">Телеметрия</p><h2>Источники журналов</h2></div><button class="text-button" data-view-target="architecture">Схема</button></div>
+            <div class="source-list">
+              <div><span class="source-icon">W</span><p><strong>Windows Security</strong><small>5 284 событий</small></p><em>Активен</em></div>
+              <div><span class="source-icon">L</span><p><strong>Linux Auth</strong><small>2 912 событий</small></p><em>Активен</em></div>
+              <div><span class="source-icon">F</span><p><strong>Firewall</strong><small>2 145 событий</small></p><em>Активен</em></div>
+              <div><span class="source-icon">V</span><p><strong>VPN</strong><small>1 038 событий</small></p><em>Активен</em></div>
+              <div><span class="source-icon">E</span><p><strong>Endpoint</strong><small>874 события</small></p><em>Активен</em></div>
+              <div><span class="source-icon">A</span><p><strong>Applications</strong><small>227 событий</small></p><em>Активен</em></div>
+            </div>
+          </article>
+        </div>
+
+        <article class="panel incidents-panel">
+          <div class="panel-head"><div><p class="eyebrow">Приоритетная очередь</p><h2>Активные инциденты</h2></div><button class="text-button" data-view-target="incidents">Открыть все</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Риск</th><th>Инцидент</th><th>Источник</th><th>Объект</th><th>Время</th><th>Статус</th></tr></thead><tbody id="dashboard-incidents"></tbody></table></div>
+        </article>
+      </section>
+
+      <section class="view" id="events-view">
+        <div class="section-intro"><div><p class="eyebrow">Нормализованный поток</p><h2>События безопасности</h2><p>Фильтрация журналов по источнику, уровню риска и содержимому.</p></div><span class="demo-tag">Демо-данные</span></div>
+        <div class="filter-bar">
+          <label><span>Поиск</span><input id="event-search" type="search" placeholder="Например, 10.24.8.19"></label>
+          <label><span>Уровень</span><select id="severity-filter"><option value="all">Все уровни</option><option value="Критический">Критический</option><option value="Высокий">Высокий</option><option value="Средний">Средний</option><option value="Низкий">Низкий</option></select></label>
+          <label><span>Источник</span><select id="source-filter"><option value="all">Все источники</option><option>Windows</option><option>Linux</option><option>Firewall</option><option>VPN</option><option>Endpoint</option><option>Application</option></select></label>
+          <button id="reset-filters" class="secondary-button">Сбросить</button>
+        </div>
+        <article class="panel table-panel"><div class="table-status"><span id="event-result-count">0 событий</span><span>Обновлено сейчас</span></div><div class="table-wrap"><table><thead><tr><th>Время</th><th>Уровень</th><th>Событие</th><th>Источник</th><th>Пользователь</th><th>IP-адрес</th><th>Оценка ИИ</th></tr></thead><tbody id="events-table"></tbody></table></div></article>
+      </section>
+
+      <section class="view" id="incidents-view">
+        <div class="section-intro"><div><p class="eyebrow">Рабочая очередь</p><h2>Инциденты</h2><p>Проверка контекста, объяснения ИИ и фиксация решения аналитика.</p></div><button class="primary-button" id="focus-critical">Показать критические</button></div>
+        <div class="incident-layout"><div class="incident-list" id="incident-list"></div><article class="incident-detail panel" id="incident-detail" aria-live="polite"></article></div>
+      </section>
+
+      <section class="view" id="model-view">
+        <div class="section-intro"><div><p class="eyebrow">Проектное решение</p><h2>Модуль искусственного интеллекта</h2><p>Планируемая гибридная схема объединяет поиск аномалий, классификацию и правила корреляции.</p></div><span class="demo-tag amber">Проект СРО2</span></div>
+        <div class="model-flow">
+          <article><span>01</span><h3>Подготовка признаков</h3><p>Время, источник, пользователь, IP, тип действия, частота и результат операции.</p></article>
+          <article><span>02</span><h3>Isolation Forest</h3><p>Поиск новых отклонений без обязательной разметки всех видов атак.</p></article>
+          <article><span>03</span><h3>Random Forest</h3><p>Классификация известных событий по обучающей выборке.</p></article>
+          <article><span>04</span><h3>Корреляция</h3><p>Объединение связанных событий в один инцидент и расчёт итогового риска.</p></article>
+        </div>
+        <div class="dashboard-grid model-grid">
+          <article class="panel"><div class="panel-head"><div><p class="eyebrow">Формула прототипа</p><h2>Оценка риска</h2></div></div><div class="risk-formula"><span>0,45 × аномалия</span><b>+</b><span>0,35 × классификация</span><b>+</b><span>0,20 × правило</span></div><p class="fine-print">Коэффициенты являются проектным решением. Их потребуется подобрать по результатам обучения и тестирования на СРО3–СРО4.</p></article>
+          <article class="panel"><div class="panel-head"><div><p class="eyebrow">Контроль качества</p><h2>Планируемые показатели</h2></div></div><dl class="quality-list"><div><dt>Precision</dt><dd>доля подтверждённых срабатываний</dd></div><div><dt>Recall</dt><dd>доля обнаруженных инцидентов</dd></div><div><dt>F1</dt><dd>баланс precision и recall</dd></div><div><dt>False positive rate</dt><dd>частота ложных тревог</dd></div></dl></article>
+        </div>
+      </section>
+
+      <section class="view" id="architecture-view">
+        <div class="section-intro"><div><p class="eyebrow">Техническая модель</p><h2>Архитектура системы</h2><p>Компоненты разделены по слоям, чтобы независимо масштабировать сбор, анализ и интерфейс.</p></div><span class="demo-tag">Версия 1.0</span></div>
+        <article class="architecture-canvas panel">
+          <div class="arch-layer"><h3>Источники</h3><div class="arch-row"><div>Windows Security</div><div>Linux Auth</div><div>Firewall</div><div>VPN</div><div>Endpoint</div></div></div>
+          <div class="arch-connector"><span></span><b>Syslog · API · агенты</b><span></span></div>
+          <div class="arch-layer accent"><h3>Сбор и обработка</h3><div class="arch-row"><div>Коллектор</div><div>Парсер</div><div>Нормализация</div><div>Очередь событий</div></div></div>
+          <div class="arch-connector"><span></span><b>структурированные события</b><span></span></div>
+          <div class="arch-split"><div class="arch-layer"><h3>Хранилище</h3><div class="arch-row two"><div>Elasticsearch<br><small>события и поиск</small></div><div>PostgreSQL<br><small>инциденты и пользователи</small></div></div></div><div class="arch-layer ai"><h3>ИИ и корреляция</h3><div class="arch-row two"><div>Isolation Forest<br><small>поиск аномалий</small></div><div>Random Forest<br><small>классификация</small></div><div>Правила<br><small>связи событий</small></div><div>Risk Score<br><small>приоритет</small></div></div></div></div>
+          <div class="arch-connector"><span></span><b>API</b><span></span></div>
+          <div class="arch-layer output"><h3>Пользовательский слой</h3><div class="arch-row"><div>Панель аналитика</div><div>Инциденты</div><div>Отчёты</div><div>Уведомления</div></div></div>
+        </article>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
