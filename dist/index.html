@@ -105,7 +105,7 @@
           <label><span>Источник</span><select id="source-filter"><option value="all">Все источники</option><option>Windows</option><option>Linux</option><option>Firewall</option><option>VPN</option><option>Endpoint</option><option>Application</option></select></label>
           <button id="reset-filters" class="secondary-button">Сбросить</button>
         </div>
-        <article class="panel table-panel"><div class="table-status"><span id="event-result-count">0 событий</span><span>Обновлено сейчас</span></div><div class="table-wrap"><table><thead><tr><th>Время</th><th>Уровень</th><th>Событие</th><th>Источник</th><th>Пользователь</th><th>IP-адрес</th><th>Оценка ИИ</th></tr></thead><tbody id="events-table"></tbody></table></div></article>
+        <article class="panel table-panel"><div class="table-status"><span id="event-result-count">0 событий</span><span>Обновлено сейчас</span></div><div class="table-wrap"><table><thead><tr><th>Время</th><th>Уровень</th><th>Событие</th><th>Источник</th><th>Пользователь</th><th>IP-адрес</th><th>Оценка ИИ, %</th></tr></thead><tbody id="events-table"></tbody></table></div></article>
       </section>
 
       <section class="view" id="incidents-view">
@@ -122,7 +122,7 @@
           <article><span>04</span><h3>Корреляция</h3><p>Объединение связанных событий в один инцидент и расчёт итогового риска.</p></article>
         </div>
         <div class="dashboard-grid model-grid">
-          <article class="panel"><div class="panel-head"><div><p class="eyebrow">Формула прототипа</p><h2>Оценка риска</h2></div></div><div class="risk-formula"><span>0,45 × аномалия</span><b>+</b><span>0,35 × классификация</span><b>+</b><span>0,20 × правило</span></div><p class="fine-print">Коэффициенты являются проектным решением. Их потребуется подобрать по результатам обучения и тестирования на СРО3–СРО4.</p></article>
+          <article class="panel"><div class="panel-head"><div><p class="eyebrow">Формула прототипа</p><h2>Оценка риска</h2></div></div><div class="risk-formula"><span>R = 100% × (</span><span>0,45 × аномалия</span><b>+</b><span>0,35 × классификация</span><b>+</b><span>0,20 × правило</span><span>)</span></div><p class="fine-print"><strong>Все три входа предварительно нормализуются в диапазон от 0 до 1.</strong> Коэффициенты являются проектной гипотезой и калибруются на размеченных данных.</p></article>
           <article class="panel"><div class="panel-head"><div><p class="eyebrow">Контроль качества</p><h2>Планируемые показатели</h2></div></div><dl class="quality-list"><div><dt>Precision</dt><dd>доля подтверждённых срабатываний</dd></div><div><dt>Recall</dt><dd>доля обнаруженных инцидентов</dd></div><div><dt>F1</dt><dd>баланс precision и recall</dd></div><div><dt>False positive rate</dt><dd>частота ложных тревог</dd></div></dl></article>
         </div>
       </section>
@@ -130,13 +130,33 @@
       <section class="view" id="architecture-view">
         <div class="section-intro"><div><p class="eyebrow">Техническая модель</p><h2>Архитектура системы</h2><p>Компоненты разделены по слоям, чтобы независимо масштабировать сбор, анализ и интерфейс.</p></div><span class="demo-tag">Версия 1.0</span></div>
         <article class="architecture-canvas panel">
-          <div class="arch-layer"><h3>Источники</h3><div class="arch-row"><div>Windows Security</div><div>Linux Auth</div><div>Firewall</div><div>VPN</div><div>Endpoint</div></div></div>
+          <div class="arch-layer"><h3>Источники</h3><div class="arch-row sources"><div>Windows Security</div><div>Linux Auth</div><div>Firewall</div><div>VPN</div><div>Endpoint</div><div>Приложения<br><small>API и аудит</small></div></div></div>
           <div class="arch-connector"><span></span><b>Syslog · API · агенты</b><span></span></div>
-          <div class="arch-layer accent"><h3>Сбор и обработка</h3><div class="arch-row"><div>Коллектор</div><div>Парсер</div><div>Нормализация</div><div>Очередь событий</div></div></div>
+          <div class="arch-layer accent"><h3>Сбор и обработка</h3><div class="arch-row four"><div>Коллектор</div><div>Парсер</div><div>Нормализация</div><div>Очередь событий</div></div></div>
           <div class="arch-connector"><span></span><b>структурированные события</b><span></span></div>
           <div class="arch-split"><div class="arch-layer"><h3>Хранилище</h3><div class="arch-row two"><div>Elasticsearch<br><small>события и поиск</small></div><div>PostgreSQL<br><small>инциденты и пользователи</small></div></div></div><div class="arch-layer ai"><h3>ИИ и корреляция</h3><div class="arch-row two"><div>Isolation Forest<br><small>поиск аномалий</small></div><div>Random Forest<br><small>классификация</small></div><div>Правила<br><small>связи событий</small></div><div>Risk Score<br><small>приоритет</small></div></div></div></div>
           <div class="arch-connector"><span></span><b>API</b><span></span></div>
-          <div class="arch-layer output"><h3>Пользовательский слой</h3><div class="arch-row"><div>Панель аналитика</div><div>Инциденты</div><div>Отчёты</div><div>Уведомления</div></div></div>
+          <div class="arch-layer output"><h3>Пользовательский слой</h3><div class="arch-row four"><div>Панель аналитика</div><div>Инциденты</div><div>Отчёты</div><div>Уведомления</div></div></div>
+          <div class="arch-connector"><span></span><b>решение аналитика</b><span></span></div>
+          <div class="arch-layer feedback"><h3>Контур обратной связи</h3><div class="feedback-flow"><div>Подтверждено / ложное срабатывание</div><b>›</b><div>База размеченных данных</div><b>›</b><div>Проверка качества и переобучение модели</div></div></div>
+          <div class="arch-connector"><span></span><b>сквозные меры защиты</b><span></span></div>
+          <div class="arch-layer security"><h3>Защита и контроль доступа</h3><div class="arch-row four"><div>Авторизация<br><small>SSO / MFA</small></div><div>Разграничение ролей<br><small>RBAC</small></div><div>Журнал действий<br><small>append-only аудит</small></div><div>Контроль доступа<br><small>события и инциденты</small></div></div></div>
+        </article>
+        <article class="architecture-canvas panel architecture-subsection">
+          <div class="panel-head"><div><p class="eyebrow">ER-схема</p><h2>Основные сущности данных</h2></div><span class="demo-tag">Elasticsearch + PostgreSQL</span></div>
+          <div class="er-grid" role="img" aria-label="Связи сущностей Source, Event, ModelResult, Incident, User и AnalystAction">
+            <div class="er-entity"><strong>Source</strong><small>source_id · type · status</small></div>
+            <div class="er-relation">1 : N</div>
+            <div class="er-entity"><strong>Event</strong><small>event_id · source_id · timestamp</small></div>
+            <div class="er-relation">1 : N</div>
+            <div class="er-entity ai-entity"><strong>ModelResult</strong><small>event_id · score · factors · version</small></div>
+            <div class="er-entity"><strong>Incident</strong><small>incident_id · risk · status · assignee</small></div>
+            <div class="er-relation">1 : N</div>
+            <div class="er-entity"><strong>AnalystAction</strong><small>incident_id · user_id · action · time</small></div>
+            <div class="er-relation">N : 1</div>
+            <div class="er-entity"><strong>User</strong><small>user_id · role · permissions</small></div>
+          </div>
+          <p class="fine-print">Event и ModelResult хранятся в поисковом контуре. Incident, User и AnalystAction образуют транзакционный и аудируемый контур. Source связывает событие с подключённым источником телеметрии.</p>
         </article>
       </section>
     </main>
